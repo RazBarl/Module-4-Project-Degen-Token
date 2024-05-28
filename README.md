@@ -23,8 +23,8 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract DegenTokenArlos is ERC20, Ownable 
-{
+contract DegenTokenArlos is ERC20, Ownable {
+
     mapping(uint256 => uint256) public GameValue;
     
     event GameExclusiveRedeemed(address indexed gamer, uint256 indexed gameId, uint256 value);
