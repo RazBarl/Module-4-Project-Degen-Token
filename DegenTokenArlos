@@ -4,48 +4,42 @@ pragma solidity >=0.6.12 <0.9.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract DegenTokenArlos is ERC20, Ownable 
-{
+contract DegenTokenArlos is ERC20, Ownable {
     mapping(uint256 => uint256) public GameValue;
-    event GameExclusiveRedeemed(address indexed gamer, uint256 indexed gameId, uint256 value);
+    event GameExclusiveRedeemed(address indexed gamer, address indexed recipient, uint256 indexed gameId, uint256 value);
 
-    constructor(address initialOwner) Ownable(initialOwner) ERC20("DEGEN", "DGN") 
-    {
+    constructor(address initialOwner) Ownable(initialOwner) ERC20("DEGEN", "DGN") {
         _mint(initialOwner, 30000);
 
-        GameValue[1] = 1000; // Item 1: STARDEW VALLEY - Value: 1000 tokens
-        GameValue[2] = 2000; // Item 2: Surviving Mars - Value: 2000 tokens
-        GameValue[3] = 3000; // Item 3: Total War SHOGUN 2 - Value: 3000 tokens
-        GameValue[4] = 4000; // Item 4: Total War Warhammer 2 - Value: 4000 tokens
-        GameValue[5] = 5000; // Item 5: No Man Sky - Value: 5000 tokens
-        GameValue[6] = 6000; // Item 6: Valorant - Value: 6000 tokens
-        GameValue[7] = 7000; // Item 7: Assassin's Creed Origins - Value: 7000 tokens
-        GameValue[8] = 8000; // Item 8: Assassin's Creed Odyssey - Value: 8000 tokens
-        GameValue[9] = 9000; // Item 9: Star Wars Empire at war - Value: 9000 tokens
-        GameValue[10] = 10000; // Item 10: GTA VI - Value: 10000 tokens GTA VI
+        GameValue[1] = 1000;  // Game Item 1: STARDEW VALLEY - Value: 1000 tokens
+        GameValue[2] = 2000;  // Game Item 2: Surviving Mars - Value: 2000 tokens
+        GameValue[3] = 3000;  // Game Item 3: Total War SHOGUN 2 - Value: 3000 tokens
+        GameValue[4] = 4000;  // Game Item 4: Total War Warhammer 2 - Value: 4000 tokens
+        GameValue[5] = 5000;  // Game Item 5: No Man Sky - Value: 5000 tokens
+        GameValue[6] = 6000;  // Game Item 6: Valorant - Value: 6000 tokens
+        GameValue[7] = 7000;  // Game Item 7: Assassin's Creed Origins - Value: 7000 tokens
+        GameValue[8] = 8000;  // Game Item 8: Assassin's Creed Odyssey - Value: 8000 tokens
+        GameValue[9] = 9000;  // Game Item 9: Star Wars Empire at war - Value: 9000 tokens
+        GameValue[10] = 10000; // Game Item 10: GTA VI - Value: 10000 tokens GTA VI
     }
 
-    function mint(address to, uint256 amount) public onlyOwner 
-    {
+    function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
     }
 
-    function burn(uint256 amount) public 
-    {
+    function burn(uint256 amount) public {
         _burn(msg.sender, amount);
     }
 
-    function setItemValue(uint256 gameId, uint256 value) external onlyOwner 
-    {
+    function setItemValue(uint256 gameId, uint256 value) external onlyOwner {
         GameValue[gameId] = value;
     }
 
-    function RedeemExclusiveGame(uint256 gameId) external 
-    {
+    function RedeemExclusiveGame(uint256 gameId, address recipient) external {
         require(GameValue[gameId] > 0, "Game Value is not set");
         require(balanceOf(msg.sender) >= GameValue[gameId], "Insufficient balance");
 
-        _transfer(msg.sender, owner(), GameValue[gameId]);
-        emit GameExclusiveRedeemed(msg.sender, gameId, GameValue[gameId]);
+        _transfer(msg.sender, recipient, GameValue[gameId]); // Transfer tokens from the redeemer to the recipient
+        emit GameExclusiveRedeemed(msg.sender, recipient, gameId, GameValue[gameId]);
     }
-} 
+}
