@@ -25,7 +25,9 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract DegenTokenArlos is ERC20, Ownable {
+
     mapping(uint256 => uint256) public GameValue;
+    
     event GameExclusiveRedeemed(address indexed gamer, address indexed recipient, uint256 indexed gameId, uint256 value);
 
     constructor(address initialOwner) Ownable(initialOwner) ERC20("DEGEN", "DGN") {
