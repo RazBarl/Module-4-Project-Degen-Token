@@ -24,18 +24,18 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract DegenTokenArlos is ERC20, Ownable 
-{
-    
+contract DegenTokenArlos is ERC20, Ownable {
+
     mapping(uint256 => uint256) public GameValue;
+    
     mapping(uint256 => address) public RedeemedItems;
+    
     mapping(uint256 => address) public GameItemOwners;
 
     event GameExclusiveRedeemed(address indexed gamer, address indexed recipient, uint256 indexed gameId, uint256 value);
     event GameItemTransferred(uint256 indexed gameId, address indexed recipient);
 
-    constructor(address initialOwner) Ownable(initialOwner) ERC20("DEGEN", "DGN") 
-    {
+    constructor(address initialOwner) Ownable(initialOwner) ERC20("DEGEN", "DGN") {
         _mint(initialOwner, 30000);
 
         GameValue[1] = 1000;  // Game Item 1: STARDEW VALLEY - Value: 1000 tokens
@@ -50,23 +50,19 @@ contract DegenTokenArlos is ERC20, Ownable
         GameValue[10] = 10000; // Game Item 10: GTA VI - Value: 10000 tokens GTA VI
     }
 
-    function mint(address to, uint256 amount) public onlyOwner 
-    {
+    function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
     }
 
-    function burn(uint256 amount) public 
-    {
+    function burn(uint256 amount) public {
         _burn(msg.sender, amount);
     }
 
-    function setItemValue(uint256 gameId, uint256 value) external onlyOwner 
-    {
+    function setItemValue(uint256 gameId, uint256 value) external onlyOwner {
         GameValue[gameId] = value;
     }
 
-    function RedeemExclusiveGame(uint256 gameId, address recipient) external 
-    {
+    function RedeemExclusiveGame(uint256 gameId, address recipient) external {
         require(GameValue[gameId] > 0, "Game Value is not set");
         require(balanceOf(msg.sender) >= GameValue[gameId], "Insufficient balance");
 
@@ -76,6 +72,10 @@ contract DegenTokenArlos is ERC20, Ownable
 
         GameItemOwners[gameId] = recipient;
         emit GameItemTransferred(gameId, recipient);
+    }
+    function transfer(address recipient, uint256 amount) public virtual override returns (bool) {
+        _transfer(_msgSender(), recipient, amount);
+        return true;
     }
 }
 
